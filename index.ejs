@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Http Video Streaming</title>
     <style>
         body, html {
@@ -12,8 +12,8 @@
             justify-content: center;
             align-items: center;
             background-color: #000;
-        }
-    .video-container {
+	}
+	.video-container {
             width: 100%;
             max-width: 100%;
         }
@@ -26,10 +26,11 @@
     </style>
 </head>
 <body>
-<div class="video-container">
+	<div class="video-container">
         <video id="videoPlayer" controls muted="muted" autoplay>
             <source src="/video/<%= videoName %>" type="video/mp4"/>
         </video>
     </div>
 </body>
 </html>
+
