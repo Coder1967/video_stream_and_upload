@@ -38,7 +38,7 @@
     <body>
         <div class="video-container">
         <video id="videoPlayer" width="650" controls muted="muted" autoplay>
-            <source src="/video" type="video/mp4"/>
+		<source src="/video/<%= videoName %>" type="<%= mimeType %>"/>
 
         </video>
         </div>

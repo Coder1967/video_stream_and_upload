@@ -1,18 +1,34 @@
-const app = require("express")()
-const fs = require("fs")
-const upload = require("./storage")
+const app = require("express")();
+const fs = require("fs");
+const upload = require("./storage");
+const ejs = require("ejs");
+const getMimeType = require("./formatHandler")
+app.set('view engine', 'ejs');
+app.set('views', __dirname);
 
-app.get("/", (req, res)=>{
-    res.sendFile(__dirname + "/index.html")
+
+app.get("/:videoName", (req, res)=>{
+  fs.access(`videos/${req.params.videoName}`, fs.constants.F_OK, (err) => {
+  if (err) {
+    return res.status(404).send("<h1>Video does not exist</h2>")
+  }
+  const mimeType = getMimeType(req.params.videoName)
+  if (null) return res.status(400).send("unrecognized mimetype");
+  videoName = req.params.videoName
+  res.render('index', { mimeType, videoName});
+});
 });
 
-app.get("/video", (req, res)=>{
+
+app.get("/video/:videoName", (req, res)=>{
     const range = req.headers.range;
+    const mimeType = getMimeType(req.params.videoName)
+    const videoName = req.params.videoName
     if (!range) {
         res.status(400).send("Requires Range header");
     }
-    const videoPath = "video.mp4";
-    const videoSize = fs.statSync("video.mp4").size;
+    const videoPath = "./videos/"+videoName;
+    const videoSize = fs.statSync(videoPath).size;
     const CHUNK_SIZE = 10 ** 6;
     const start = Number(range.replace(/\D/g, ""));
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1)
@@ -22,17 +38,27 @@ app.get("/video", (req, res)=>{
         "Content-Range": `bytes ${start}-${end}/${videoSize}`,
         "Accept-Ranges": "bytes",
         "Content-Length": contentLength,
-        "Content-Type": "video/mp4"
+        "Content-Type": mimeType
     };
     res.writeHead(206, headers);
     const videoStream = fs.createReadStream(videoPath, {start, end});
     videoStream.pipe(res);
 })
 
+
 app.post('/upload-video', upload.single('myVideo'), (req, res) => {
-    console.log(`Video uploaded: ${req.file.filename}`)
+    fs.appendFile("videoContent.txt", req.file.filename + ", ", (err) => {
+  if (err) throw err;
+  console.log('Data appended to file!');
+});
     res.status(200).send("sucessfully uploaded")
 })
+
+
+app.get("/existing", (req, res)=>{
+  res.sendFile("videoContent.txt")
+})
+
 
 app.listen(5000, ()=>{
     console.log("server running on port 5000")
