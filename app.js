@@ -57,7 +57,7 @@ app.post('/upload-video', upload.single('myVideo'), (req, res) => {
 
 
 app.get("/existing/videos", (req, res)=>{
-  fs.stat(__dirname, (err, stats) => {
+  fs.stat(path.join(__dirname, "videoContent.txt"), (err, stats) => {
     if (err) {
       console.error('Error reading file:', err);
       return res.status(500).send("Something went wrong")
