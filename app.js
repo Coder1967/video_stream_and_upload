@@ -16,9 +16,16 @@ app.get("/:videoName", (req, res)=>{
   }
   if (null) return res.status(400).send("unrecognized mimetype");
   videoName = req.params.videoName
+  let byteSize = fs.statSync(`./videos/${videoName}`).size;
+  let mbSize = byteSize / (1024 * 1024)
+
+  if (mbSize < 15) {
+    return res.status(200).sendFile(path.join(__dirname, "videos", videoName))
+  }
   res.render('index', { videoName});
 });
 });
+
 
 
 app.get("/video/:videoName", (req, res)=>{
