@@ -48,7 +48,7 @@ app.get("/video/:videoName", (req, res)=>{
 
 
 app.post('/upload-video', upload.single('myVideo'), (req, res) => {
-    fs.appendFile("videoContent.txt", req.file.filename + ", ", (err) => {
+    fs.appendFile("videoContent.txt", req.file.filename + ",", (err) => {
   if (err) throw err;
   console.log('Data appended to file!');
 });
