@@ -12,8 +12,8 @@
             justify-content: center;
             align-items: center;
             background-color: #000;
-	}
-	.video-container {
+        }
+        .video-container {
             width: 100%;
             max-width: 100%;
         }
@@ -26,11 +26,10 @@
     </style>
 </head>
 <body>
-	<div class="video-container">
-        <video id="videoPlayer" controls muted="muted" autoplay>
+    <div class="video-container">
+        <video id="videoPlayer" controls muted="muted">
             <source src="/video/<%= videoName %>" type="video/mp4"/>
         </video>
     </div>
 </body>
 </html>
-
