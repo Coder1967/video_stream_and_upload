@@ -1,21 +1,22 @@
 const app = require("express")();
 const fs = require("fs");
+const path = require("path")
 const upload = require("./storage");
+const cors = require('cors');
 const ejs = require("ejs");
 const getMimeType = require("./formatHandler")
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
-
+app.use(cors())
 
 app.get("/:videoName", (req, res)=>{
   fs.access(`videos/${req.params.videoName}`, fs.constants.F_OK, (err) => {
   if (err) {
     return res.status(404).send("<h1>Video does not exist</h2>")
   }
-  const mimeType = getMimeType(req.params.videoName)
   if (null) return res.status(400).send("unrecognized mimetype");
   videoName = req.params.videoName
-  res.render('index', { mimeType, videoName});
+  res.render('index', { videoName});
 });
 });
 
@@ -55,8 +56,19 @@ app.post('/upload-video', upload.single('myVideo'), (req, res) => {
 })
 
 
-app.get("/existing", (req, res)=>{
-  res.sendFile("videoContent.txt")
+app.get("/existing/videos", (req, res)=>{
+  fs.stat(__dirname, (err, stats) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      return res.status(500).send("Something went wrong")
+    } else {
+      if (stats.size === 0) {
+        return res.status(400).send("No videos available")
+      } else {
+        res.status(200).sendFile(path.join(__dirname, "videoContent.txt"))
+      }
+    }
+  });
 })
 
 

@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8"/>
-        <meta name="viewport" content="device-width"/>
+        <meta name="viewport" />
         <title>Http Video Streaming</title>
         <style>
             body {
@@ -38,7 +38,7 @@
     <body>
         <div class="video-container">
         <video id="videoPlayer" width="650" controls muted="muted" autoplay>
-		<source src="/video/<%= videoName %>" type="<%= mimeType %>"/>
+		<source src="/video/<%= videoName %>" type="video/mp4"/>
 
         </video>
         </div>
