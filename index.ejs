@@ -16,21 +16,23 @@
         .video-container {
             width: 100%;
             max-width: 100%;
+            height: 100vh; /* Set the height to fill the viewport height */
         }
 
         #videoPlayer {
             width: 100%;
-            height: 100%;
+            height: 100%; /* Make sure the video fills the container */
             object-fit: cover;
         }
     </style>
 </head>
 <body>
     <div class="video-container">
-        <video id="videoPlayer"  controls width='100%' height='100%' muted playsinline>  
+        <video id="videoPlayer"  controls playsinline>  
             <source src="/video/<%= videoName %>" type="video/mp4"/>
         </video>
-        
     </div>
 </body>
 </html>
+
+

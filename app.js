@@ -2,12 +2,15 @@ const app = require("express")();
 const fs = require("fs");
 const path = require("path")
 const upload = require("./storage");
+const util = require('util');
 const cors = require('cors');
 const ejs = require("ejs");
 const getMimeType = require("./formatHandler")
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
 app.use(cors())
+const readFileAsync = util.promisify(fs.readFile);
+
 
 app.get("/:videoName", (req, res)=>{
   fs.access(`videos/${req.params.videoName}`, fs.constants.F_OK, (err) => {
@@ -59,7 +62,8 @@ app.post('/upload-video', upload.single('myVideo'), (req, res) => {
   if (err) throw err;
   console.log('Data appended to file!');
 });
-    res.status(200).send("sucessfully uploaded")
+    const currentUrl = `${req.protocol}://${req.get('host')}/${req.file.filename}`;
+    res.status(200).json({message: "sucessfully uploaded", url: currentUrl})
 })
 
 
@@ -72,8 +76,20 @@ app.get("/existing/videos", (req, res)=>{
       if (stats.size === 0) {
         return res.status(400).send("No videos available")
       } else {
-        res.status(200).sendFile(path.join(__dirname, "videoContent.txt"))
-      }
+          readFileAsync("videoContent.txt", 'utf8')
+            .then(data => {
+              let dataArray = data.split(",")
+              const currentUrl = `${req.protocol}://${req.get('host')}`;
+              urlArray =  dataArray.map((element)=>{
+                return currentUrl + '/' + element
+              })
+              return res.status(200).send(urlArray.slice(0, -1))
+              })
+              .catch(err => {
+                console.error('Error reading the file:', err);
+                return res.status(500).send("Couldn't fetch links")
+              });
+            }
     }
   });
 })
