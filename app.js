@@ -30,7 +30,6 @@ app.get("/:videoName", (req, res)=>{
 });
 
 
-
 app.get("/video/:videoName", (req, res)=>{
     const range = req.headers.range;
     const mimeType = getMimeType(req.params.videoName)
