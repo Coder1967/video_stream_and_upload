@@ -6,11 +6,12 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, "videos"))
     },
     filename: function (req, file, cb) {
-        const originalname = path.parse(file.originalname).name; 
+    const originalname = path.parse(file.originalname).name; 
     const timestamp = Date.now();
     const extension = path.extname(file.originalname);
     const newFilename = `${originalname}-${timestamp}${extension}`;
-    cb(null, newFilename);
+    const filenameWithoutSpace = newFilename.replace(/\s/g, '');
+    cb(null, filenameWithoutSpace);
     },
 });
 const upload = multer({ storage: storage,
