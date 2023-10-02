@@ -13,7 +13,6 @@ const appendFileAsync = util.promisify(fs.appendFile)
 router.get("/:videoName", (req, res)=>{
   fs.access(`videos/${req.params.videoName}`, fs.constants.F_OK, (err) => {
   if (err) return res.status(404).send("<h1>Video does not exist</h2>")
-  if (null) return res.status(400).send("unrecognized mimetype");
   videoName = req.params.videoName
   let byteSize = fs.statSync(`./videos/${videoName}`).size;
   let mbSize = byteSize / (1024 * 1024)
@@ -35,7 +34,7 @@ router.get("/video/:videoName", (req, res)=>{
     }
     const videoPath = "./videos/"+videoName;
     const videoSize = fs.statSync(videoPath).size;
-    const CHUNK_SIZE = 10 ** 6;
+    const CHUNK_SIZE = 5 ** 6;
     const start = Number(range.replace(/\D/g, ""));
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1)
     const contentLength = end- start + 1;
@@ -130,7 +129,7 @@ router.post("/create/videoFile", async (req, res)=>{
 router.get("/transcripts/:videoName", (req, res)=>{
   try {
     const fileInfo = path.parse(req.params.videoName);
-    const fileName = fileInfo.name + ".json";
+    const fileName = fileInfo.name + ".txt";
     res.sendFile(path.join(__dirname, "transcripts", fileName))
   } catch(error){
     res.status(404).send(error.message)
